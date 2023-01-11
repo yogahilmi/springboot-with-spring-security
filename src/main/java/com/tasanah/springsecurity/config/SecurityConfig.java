@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -16,7 +16,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableMethodSecurity
 public class SecurityConfig {
 
   @Bean
@@ -40,24 +40,24 @@ public class SecurityConfig {
       // care of that)
       // CLOSED, authentication is handled from apigee via bearer. This implementation is also
       // from bearer with JWT format and can cause conflict.
-            .addFilterAfter(
-      // This is where we hook our auth filter
-              new AuthenticationFilter(authenticationService),
-              UsernamePasswordAuthenticationFilter.class
-            )
+      .addFilterAfter(
+        // This is where we hook our auth filter
+        new AuthenticationFilter(authenticationService),
+        UsernamePasswordAuthenticationFilter.class
+      )
       // Authorization requests config
-      .authorizeRequests()
+      .authorizeHttpRequests()
       // Enabled swagger end points
-      .antMatchers("/api-docs", "/api-docs/**", "/swagger*/**", "/webjars/**")
+      .requestMatchers("/api-docs", "/api-docs/**", "/swagger*/**", "/webjars/**")
       .permitAll()
       // Allow actuator APIs for health check and monitoring
-      .antMatchers("/actuator/**")
+      .requestMatchers("/actuator/**")
       .permitAll()
       // Allow OPTIONS call for preflight requests
-      .antMatchers(HttpMethod.OPTIONS)
+      .requestMatchers(HttpMethod.OPTIONS)
       .permitAll()
       // Allow internal endpoints for service users only !
-      .antMatchers("/**")
+      .requestMatchers("/**")
       .hasAuthority(AuthenticationClaim.SYSTEM_SERVICE.toString())
       // All others should be public
       .anyRequest()
