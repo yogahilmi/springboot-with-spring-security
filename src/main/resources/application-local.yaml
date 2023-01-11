@@ -1,0 +1,51 @@
+springdoc:
+  version: '3.0'
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+logging:
+  pattern:
+    console: '%d{dd-MM-yyyy HH:mm:ss.SSS} [%-5level] [%-25thread] [%-36X{correlationId}] [%C{0}@%L]: %msg%n'
+  level:
+    org:
+      hibernate:
+        SQL: debug
+        type:
+          descriptor:
+            sql: trace
+      springframework:
+        web:
+          client:
+            RestTemplate: DEBUG
+
+spring:
+  datasource:
+    platform: postgres
+    url: jdbc:postgresql://localhost:5432/postgres?currentSchema=postgres
+    driverClassName: org.postgresql.Driver
+    username: postgres
+    password: postgres
+  flyway:
+    baseline-on-migrate: true
+
+management:
+  endpoint:
+    health:
+      show-details: always
+
+setting:
+  service:
+    internal:
+      name: springsecurity
+      key: LOCAL_KEY
+  jwt:
+    token:
+      issuer: LOCAL
+    jks:
+      filePath: './jks-file.jks'
+      filePassword: 'P@ssw0rd'
+      keyName: 'jwt_key'
+      keyPassword: 'P@ssw0rd'
+      keyAlgorithm: 'SECRET'

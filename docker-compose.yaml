@@ -1,0 +1,35 @@
+version: "3.8"
+services:
+  rabbitmq3:
+    container_name: "rabbitmq"
+    image: rabbitmq:3.8-management-alpine
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    ports:
+      # AMQP protocol port
+      - "5672:5672"
+      # HTTP management UI
+      - "15672:15672"
+  postgres:
+    image: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+  springsecurity:
+    build:
+      context: .
+    ports:
+      - "8080:8080"
+    environment:
+      JAVA_OPTS: -DXmx1g
+      SPRING_PROFILES_ACTIVE: local
+    links:
+      - postgres
+      - rabbitmq3
+    depends_on:
+      - postgres
+      - rabbitmq3

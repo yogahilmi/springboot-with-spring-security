@@ -1,0 +1,22 @@
+# Git ref path
+.git
+
+# Framework cache
+.cache
+.project
+.DS_Store
+.settings
+.classpath
+.factorypath
+
+# Editor garbage
+.idea/
+.vscode/
+.settings/
+
+# Compiled Code
+target/
+**/*.class
+
+# EXCEPT compiled uber-jar
+!target/*.jar
